@@ -10,8 +10,6 @@ services:
       REPO_DIR: /data/5etools-src
       IMG_REPO_URL: https://github.com/5etools-mirror-3/5etools-img.git
       IMG_REPO_DIR: /data/5etools-img
-    ports:
-      - "8080:80"
     volumes:
       - 5etools_data:/data
     networks:
