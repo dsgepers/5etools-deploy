@@ -1,0 +1,35 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 5etools-web
+    restart: unless-stopped
+    environment:
+      REPO_URL: https://github.com/5etools-mirror-3/5etools-src.git
+      REPO_DIR: /data/5etools-src
+      IMG_REPO_URL: https://github.com/5etools-mirror-3/5etools-img.git
+      IMG_REPO_DIR: /data/5etools-img
+    ports:
+      - "8080:80"
+    volumes:
+      - 5etools_data:/data
+    networks:
+      - tunnel-net
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: 5etools-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
+    depends_on:
+      - web
+    networks:
+      - tunnel-net
+
+networks:
+  tunnel-net:
+    driver: bridge
+
+volumes:
+  5etools_data:
